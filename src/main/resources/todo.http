@@ -1,0 +1,19 @@
+GET http://localhost:8080/items
+
+###
+
+POST http://localhost:8080/items
+Content-type: application/json
+
+{
+  "text": "Umyj schody"
+}
+
+###
+
+PUT http://localhost:8080/items/id
+Content-type: application/json
+
+{
+  "done": true
+}

@@ -1,31 +1,83 @@
-package exercises
+package pl.scala.exercises.stdlib
 
-import org.scalatest.flatspec.AnyFlatSpec
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.Inside
-import org.scalatest.concurrent.Futures
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import pl.scala.exercises.Actions
-import pl.scala.exercises.CompanyRepository
-import pl.scala.exercises.Exercises
+import org.scalatest.prop.TableDrivenPropertyChecks
+import pl.scala.exercises.futures.Actions
 import pl.scala.exercises.model._
 
-import scala.concurrent.ExecutionContext.Implicits._
 import java.time.LocalDate
-import scala.concurrent.Future
 
-class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Inside with ScalaFutures {
+class StdLibExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Inside with TableDrivenPropertyChecks {
 
   trait Fixture {
 
     val actions = mock[Actions]
 
-    val exercises = new Exercises(actions)
+    val exercises = new StdLibExercises(actions)
 
   }
 
-  it should "get emails of all email - Ex1" in new Fixture {
+  it should "check temperature" in new Fixture {
+
+    val cases = Table(
+      ("scale", "temperature", "result"),
+      ("celcius", 0.0, false),
+      ("celcius", 26.0, false),
+      ("celcius", 15.0, true),
+      ("celcius", 25.0, true),
+      ("fahrenheit", 32.0, false),
+      ("fahrenheit", 80.8, false),
+      ("fahrenheit", 59.0, true),
+      ("fahrenheit", 77.0, true)
+    )
+
+    forEvery(cases) {
+      case (scale, temperature, result) =>
+        exercises.checkTemperature(temperature, scale) shouldBe result
+    }
+
+  }
+
+  it should "throw error for wrong scala" in new Fixture {
+
+    intercept[IllegalArgumentException] {
+      exercises.checkTemperature(0, "wrong")
+    }
+  }
+
+  it should "return traverse tuple" in new Fixture {
+
+    exercises.traverse(Some(1), Some(2), Some(3)) shouldBe Some((1, 2, 3))
+    exercises.traverse(Some(1), Some(2), None) shouldBe None
+    exercises.traverse(Some(1), None, None) shouldBe None
+    exercises.traverse(None, Some(2), None) shouldBe None
+    exercises.traverse(None, None, None) shouldBe None
+
+  }
+
+  it should "correctly validate" in new Fixture {
+
+    val intValidation: Int => Either[String, Int] =
+      exercises.genericValidation[Int](a => Option.when(a < 0)("A must be greater than 0"))
+
+    intValidation(-1) shouldBe Left("A must be greater than 0")
+    intValidation(1) shouldBe Right(1)
+
+    val textValidation: String => Either[String, String] =
+      exercises.genericValidation[String](a => Option.when(a.isEmpty)("Text must be not empty"))
+    textValidation("") shouldBe Left("Text must be not empty")
+    textValidation("a") shouldBe Right("a")
+  }
+
+  it should "allow creating new instances of Employee" in new Fixture {
+    Employee(1, "Bill", "Hunter", "5552", None).isRight shouldBe true
+  }
+
+
+  it should "get emails of all email" in new Fixture {
 
     exercises.employeesEmails should contain allOf (
       "joe.doe@acme.com",
@@ -40,7 +92,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get full name of employee - Ex2" in new Fixture {
+  it should "get full name of employee" in new Fixture {
 
     val e = Employee(1, "Tony", "Lopez", "tony.lopez@acme.com", Vector.empty, Nil, Salary(100, "USD"), None, None)
 
@@ -48,7 +100,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get emails of all employees with emails - Ex3" in new Fixture {
+  it should "get emails of all employees with emails" in new Fixture {
 
     exercises.employeesNamesWithEmails should contain allOf (
       ("Joe Doe", "joe.doe@acme.com"),
@@ -63,7 +115,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get emails of all employees with emails - Ex4" in new Fixture {
+  it should "get phones of all employees with phones" in new Fixture {
 
     exercises.getAllPhones should contain allOf (
       ("Jane Smith", "444"),
@@ -82,7 +134,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get sorted names of employees - Ex5" in new Fixture {
+  it should "get sorted names of employees" in new Fixture {
 
     exercises.sortedEmployeesNames shouldBe List(
       "Joe Doe",
@@ -96,7 +148,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
     )
   }
 
-  it should "get list of employee names - Ex6" in new Fixture {
+  it should "get list of employee names" in new Fixture {
 
     exercises.listOfEmployeesNames shouldBe """|1. Joe Doe
                                                |2. Bill Johnson
@@ -108,7 +160,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
                                                |8. Joe Williams""".stripMargin
   }
 
-  it should "get list of employee names with letters - Ex7" in new Fixture {
+  it should "get list of employee names with letters" in new Fixture {
 
     exercises.listOfEmployeesNamesWithLetters shouldBe """|A. Joe Doe
                                                           |B. Bill Johnson
@@ -120,7 +172,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
                                                           |H. Joe Williams""".stripMargin
   }
 
-  it should "lowest and highest salary - Ex8" in new Fixture {
+  it should "lowest and highest salary" in new Fixture {
 
     exercises.minAndMaxSalary(CompanyRepository.employees) shouldBe Some((Salary(3000, "USD"), Salary(9100, "USD")))
 
@@ -128,7 +180,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "modify salaries - Ex9" in new Fixture {
+  it should "modify salaries" in new Fixture {
 
     exercises.modifySalaries(List(Salary(3000, "USD"), Salary(10000, "USD"), Salary(1000, "USD")), 1.2, 1.5) shouldBe List(
       Salary(1500, "USD"),
@@ -138,13 +190,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "allow creating new instances of Employee - Ex10" in new Fixture {
-
-    Employee(1, "Bill", "Hunter", "5552", None).isRight shouldBe true
-
-  }
-
-  it should "get lowest and highest salary - Ex11" in new Fixture {
+  it should "get lowest and highest salary" in new Fixture {
 
     inside(exercises.twoBestEarningEmployees) {
       case Some((first, second)) =>
@@ -155,7 +201,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "return true if employee is active - Ex12" in new Fixture {
+  it should "return true if employee is active" in new Fixture {
 
     val now = LocalDate.now()
 
@@ -186,7 +232,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get all active employee - Ex13" in new Fixture {
+  it should "get all active employee" in new Fixture {
 
     exercises.getAllActiveEmployees.map(_.fullName) shouldBe List(
       "Jane Smith",
@@ -199,7 +245,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get active department of employee - Ex14" in new Fixture {
+  it should "get active department of employee" in new Fixture {
 
     val now = LocalDate.now()
 
@@ -232,7 +278,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get all employees email by domain - Ex16" in new Fixture {
+  it should "get all employees email by domain" in new Fixture {
 
     exercises.findUsersByDomain("acme.com").map {
       case (email, employee) => (email, employee.fullName)
@@ -252,13 +298,11 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "sum of managers salaries - Ex17" in new Fixture {
-
-    exercises.getSumOfTopLevelManagersSalaries shouldBe 30100
-
+  it should "sum of managers salaries" in new Fixture {
+    exercises.getSumOfTopLevelManagersSalaries() shouldBe 30100
   }
 
-  it should "send email to all employees by department - Ex18" in new Fixture {
+  it should "send email to all employees by department" in new Fixture {
 
     (actions.sendMail _).expects("jane.smith@acme.com", "hello")
     (actions.sendMail _).expects("bill.johnson@acme.com", "hello")
@@ -270,7 +314,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "split employees - Ex19" in new Fixture {
+  it should "split employees" in new Fixture {
 
     inside(exercises.splitEmployees) {
       case (moreThanOnePhone, moreThanOnePeriod, rest) =>
@@ -281,7 +325,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get office of employee - Ex20" in new Fixture {
+  it should "get office of employee" in new Fixture {
 
     val e = Employee(
       1,
@@ -299,7 +343,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get pairs of all employees - Ex22" in new Fixture {
+  it should "get pairs of all employees" in new Fixture {
 
     exercises.getPairsOfEmployees(List("Rick", "Brooke", "Terry")) shouldBe List(
       ("Rick", "Brooke"),
@@ -312,7 +356,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "check if periods overlap - Ex23" in new Fixture {
+  it should "check if periods overlap" in new Fixture {
 
     val now = LocalDate.now()
 
@@ -339,7 +383,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get sorted employees from newest - Ex24" in new Fixture {
+  it should "get sorted employees from newest" in new Fixture {
 
     exercises.sortedEmployeesFromNewest.map(_.fullName) shouldBe List(
       "Bill Johnson",
@@ -353,7 +397,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
     )
   }
 
-  it should "split employees on salary - Ex25" in new Fixture {
+  it should "split employees on salary" in new Fixture {
 
     val (left, right) = exercises.aboveAndBelowSalary(4000)
 
@@ -361,7 +405,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
     right.map(_.fullName) shouldBe List("Kate Williams", "Ann Smith", "Joe Williams", "Gary Newman", "Tony Lopez")
   }
 
-  it should "get employment days - Ex26" in new Fixture {
+  it should "get employment days" in new Fixture {
 
     val now = LocalDate.now()
 
@@ -411,7 +455,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
     exercises.employmentDays(e2) shouldBe 0
   }
 
-  it should "return employees by departments - Ex27" in new Fixture {
+  it should "return employees by departments" in new Fixture {
 
     exercises.employeesByDepartment.view.map {
       case (d, e) => d.name -> e.map(_.fullName)
@@ -422,7 +466,7 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
       )
   }
 
-  it should "return salaries by departments - Ex28" in new Fixture {
+  it should "return salaries by departments" in new Fixture {
 
     exercises.salariesByDepartment.view.map {
       case (d, s) => d.name -> s
@@ -433,16 +477,16 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
       )
   }
 
-  it should "get resources for user - Ex31" in new Fixture {
+  it should "get resources for user" in new Fixture {
 
     exercises.getAllAvailableResources(Admin("admin")) shouldBe List(
-      EmployeeSalary("developers' salaries"),
-      EmployeeSalary("CEO salary"),
-      DatabasePassword("main database password"),
-      ProjectDocumentation("project docs"),
-      SecurityProcedure("very important procedure"),
-      SecurityReport("public report", false),
-      SecurityReport("secret report", true)
+      EmployeeSalary(name = "developers' salaries"),
+      EmployeeSalary(name = "CEO salary"),
+      DatabasePassword(name = "main database password"),
+      ProjectDocumentation(name = "project docs"),
+      SecurityProcedure(name = "very important procedure"),
+      SecurityReport(name = "public report", isSensitive = false),
+      SecurityReport(name = "secret report", isSensitive = true)
     )
 
     exercises.getAllAvailableResources(RegularUser("user", 3)) shouldBe List(
@@ -454,131 +498,34 @@ class ExercisesSpec extends AnyFlatSpec with MockFactory with Matchers with Insi
 
   }
 
-  it should "get resources for employee - Ex33" in new Fixture {
+  it should "get resources for employee" in new Fixture {
 
     val e = Employee(
-      1,
-      "Tony",
-      "Lopez",
-      "tony.lopez@acme.com",
-      Vector.empty,
-      Nil,
-      Salary(100, "USD"),
-      None,
-      None
+      id = 1,
+      firstName = "Tony",
+      lastName = "Lopez",
+      email = "tony.lopez@acme.com",
+      employmentHistory = Vector.empty,
+      phones = Nil,
+      salary = Salary(100, "USD"),
+      managerId = None,
+      location = None
     )
 
     exercises.getAllAvailableResourcesForEmployee(e) shouldBe List(
-      EmployeeSalary("developers' salaries"),
-      EmployeeSalary("CEO salary"),
-      DatabasePassword("main database password"),
-      ProjectDocumentation("project docs"),
-      SecurityProcedure("very important procedure"),
-      SecurityReport("public report", false),
-      SecurityReport("secret report", true)
+      EmployeeSalary(name = "developers' salaries"),
+      EmployeeSalary(name = "CEO salary"),
+      DatabasePassword(name = "main database password"),
+      ProjectDocumentation(name = "project docs"),
+      SecurityProcedure(name = "very important procedure"),
+      SecurityReport(name = "public report", isSensitive = false),
+      SecurityReport(name = "secret report", isSensitive = true)
     )
 
   }
 
-  it should "get highest ranking supervisor - Ex34" in new Fixture {
-
+  it should "get highest ranking supervisor" in new Fixture {
     exercises.getHighestRankingSuperior(CompanyRepository.employees.find(_.id == 3).get).map(_.fullName) shouldBe Some("Joe Williams")
-
   }
 
-  it should "move employee to department - Ex37" in new Fixture {
-
-    val now = LocalDate.now()
-
-    val e = Employee(
-      1,
-      "Tony",
-      "Lopez",
-      "tony.lopez@acme.com",
-      Vector(
-        EmploymentPeriod(
-          from = now.minusDays(204),
-          to = None,
-          departmentId = 1
-        )
-      ),
-      Nil,
-      Salary(100, "USD"),
-      None,
-      None
-    )
-
-    val updated = Employee(
-      1,
-      "Tony",
-      "Lopez",
-      "tony.lopez@acme.com",
-      Vector(
-        EmploymentPeriod(
-          from = now.minusDays(204),
-          to = Some(now),
-          departmentId = 1
-        ),
-        EmploymentPeriod(
-          from = now,
-          to = None,
-          departmentId = 2
-        )
-      ),
-      Nil,
-      Salary(100, "USD"),
-      None,
-      None
-    )
-
-    (actions.updateEmployees _).expects(List(updated)).returning(Future.unit)
-
-    exercises.moveEmployeeToDepartment(e, Department(2, "Accounting")).futureValue
-
-  }
-
-  it should "give employees a raise - Ex38" in new Fixture {
-
-    val now = LocalDate.now()
-
-    val e1 = Employee(
-      1,
-      "Tony",
-      "Lopez",
-      "tony.lopez@acme.com",
-      Vector(
-        EmploymentPeriod(
-          from = now.minusDays(204),
-          to = None,
-          departmentId = 1
-        )
-      ),
-      Nil,
-      Salary(100, "USD"),
-      None,
-      None
-    )
-
-    val e2 = Employee(
-      2,
-      "Tony",
-      "Alvares",
-      "tony.alvares@acme.com",
-      Vector.empty,
-      Nil,
-      Salary(2100, "USD"),
-      None,
-      None
-    )
-
-    val updated1 = e1.copy(salary = Salary(210, "USD"))
-    val updated2 = e2.copy(salary = Salary(2310, "USD"))
-
-    (actions.calculateRaise _).expects(1).returning(Future.successful(Salary(210, "USD")))
-    (actions.calculateRaise _).expects(2).returning(Future.successful(Salary(2310, "USD")))
-
-    (actions.updateEmployees _).expects(List(updated1, updated2)).returning(Future.unit)
-
-    exercises.giveEmployeesRaise(List(e1, e2)).futureValue
-  }
 }

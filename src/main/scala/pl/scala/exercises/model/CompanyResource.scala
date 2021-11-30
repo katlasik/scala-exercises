@@ -9,11 +9,10 @@ sealed trait CompanyResource {
 object CompanyResource {
 
   /**
-    * TODO Ex29
+    * TODO Ex30
     * Implement unapply method matching name, owning department id and isSensitive flag for trait CompanyResource.
     */
-  def unapply(c: CompanyResource): Option[(String, Int, Boolean)] =
-    Some((c.name, c.owningDepartmentId, c.isSensitive))
+  def unapply(c: CompanyResource): Option[(String, Int, Boolean)] = ???
 
 }
 

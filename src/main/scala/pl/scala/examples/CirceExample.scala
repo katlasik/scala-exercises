@@ -1,4 +1,4 @@
-package pl.scala.exercises.examples
+package pl.scala.examples
 
 import io.circe.Decoder.Result
 import io.circe._
@@ -49,4 +49,5 @@ object CirceExample extends App {
   val encoded = Car(name = "Ford Kuga", isHybrid = false).asJson.noSpaces
 
   println(s"Encoded: $encoded")
+
 }
