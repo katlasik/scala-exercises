@@ -10,13 +10,12 @@ final class StdLibExercises(actions: Actions) {
 
   /**
    * TODO Ex0
-   * Check if temperature is right. Temperature of Celcius scale between 15 and 25 should return true.
+   * Check if temperature is right. Temperature of Celsius scale between 15 and 25 should return true.
    * Otherwise return false. For Fahrenheit scale calculate temperate scale first.
    * If scale is unsupported throw UnsupportedOperationException.
    */
   def checkTemperature(degrees: Double, scale: String): Boolean = {
-
-    def degreesCelcius(degreesFahrenheit: Double) = ???
+    def degreesCelsius(degreesFahrenheit: Double) = ???
 
     ???
   }

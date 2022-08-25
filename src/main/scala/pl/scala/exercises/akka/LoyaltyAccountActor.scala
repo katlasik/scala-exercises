@@ -17,7 +17,6 @@ import scala.util.Failure
 import scala.util.Success
 
 /**
- * TODO Ex48
  * Create actor for managing balance of the  loyalty card customer.
  * Actor should be to handle all Commands from companion object.
  *

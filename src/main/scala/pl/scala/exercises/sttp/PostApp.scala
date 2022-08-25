@@ -7,7 +7,6 @@ import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
 /**
- * TODO Ex47
  * Implement methods in PostApp class to get posts and users from urls in Urls object.
  * Display list of posts' titles and users in two columns:
  *
