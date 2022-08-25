@@ -34,7 +34,6 @@ trait ProducerSupport extends KafkaConfig {
   props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, s"$KafkaHost:$KafkaPort")
   props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getCanonicalName)
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer].getCanonicalName)
-  props.put(ProducerConfig.RETRIES_CONFIG, "5")
 
   private lazy val producer = new KafkaProducer[String, String](props)
 

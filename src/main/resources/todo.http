@@ -6,7 +6,7 @@ POST http://localhost:8080/items
 Content-type: application/json
 
 {
-  "text": "Umyj schody"
+  "text": "Kup mleko"
 }
 
 ###

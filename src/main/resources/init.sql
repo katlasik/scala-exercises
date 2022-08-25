@@ -2,8 +2,6 @@ CREATE TABLE IF NOT EXISTS message
 (
     id        SERIAL PRIMARY KEY,
     text      TEXT NOT NULL,
-    author    TEXT NOT NULL,
-    chat_room TEXT NOT NULL,
     ordering  INT  NOT NULL
 );
 
