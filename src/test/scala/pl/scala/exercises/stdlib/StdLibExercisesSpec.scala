@@ -50,11 +50,11 @@ class StdLibExercisesSpec extends AnyFlatSpec with MockFactory with Matchers wit
 
   it should "return traverse tuple" in new Fixture {
 
-    exercises.traverse(Some(1), Some(2), Some(3)) shouldBe Some((1, 2, 3))
-    exercises.traverse(Some(1), Some(2), None) shouldBe None
-    exercises.traverse(Some(1), None, None) shouldBe None
-    exercises.traverse(None, Some(2), None) shouldBe None
-    exercises.traverse(None, None, None) shouldBe None
+    exercises.traverse((Some(1), Some(2), Some(3))) shouldBe Some((1, 2, 3))
+    exercises.traverse((Some(1), Some(2), None)) shouldBe None
+    exercises.traverse((Some(1), None, None)) shouldBe None
+    exercises.traverse((None, Some(2), None)) shouldBe None
+    exercises.traverse((None, None, None)) shouldBe None
 
   }
 
@@ -75,7 +75,6 @@ class StdLibExercisesSpec extends AnyFlatSpec with MockFactory with Matchers wit
   it should "allow creating new instances of Employee" in new Fixture {
     Employee(1, "Bill", "Hunter", "5552", None).isRight shouldBe true
   }
-
 
   it should "get emails of all email" in new Fixture {
 
@@ -339,7 +338,7 @@ class StdLibExercisesSpec extends AnyFlatSpec with MockFactory with Matchers wit
       Some(Location("1", Some("42")))
     )
 
-    exercises.getOfficeOfEmployee(e) shouldBe Some("42")
+    exercises.getOfficeOfEmployee(e) shouldBe Some("1: 42")
 
   }
 

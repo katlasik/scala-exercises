@@ -9,11 +9,11 @@ import scala.util.Random
 final class StdLibExercises(actions: Actions) {
 
   /**
-   * TODO Ex0
-   * Check if temperature is right. Temperature of Celsius scale between 15 and 25 should return true.
-   * Otherwise return false. For Fahrenheit scale calculate temperate scale first.
-   * If scale is unsupported throw UnsupportedOperationException.
-   */
+    * TODO Ex0
+    * Check if temperature is right. Temperature of Celsius scale between 15 and 25 should return true.
+    * Otherwise return false. For Fahrenheit scale calculate temperate scale first.
+    * If scale is unsupported throw UnsupportedOperationException.
+    */
   def checkTemperature(degrees: Double, scale: String): Boolean = {
     def degreesCelsius(degreesFahrenheit: Double) = ???
 
@@ -21,18 +21,18 @@ final class StdLibExercises(actions: Actions) {
   }
 
   /**
-   * TODO Ex1
-   * Create function that takes tuple of 3 options. If all options contain element return Some of tuple of 3 elements.
-   * If any of elements is None return None
-   */
+    * TODO Ex1
+    * Create function that takes tuple of 3 options. If all options contain element return Some of tuple of 3 elements.
+    * If any of elements is None return None
+    */
   def traverse[A](t: (Option[A], Option[A], Option[A])): Option[(A, A, A)] = ???
 
   /**
-   * TODO Ex2
-   * Create a function that validates value `a` using function `test`.
-   * If `test` returns Some containing error return left.
-   * Otherwise return right containing value
-   */
+    * TODO Ex2
+    * Create a function that validates value `a` using function `test`.
+    * If `test` returns Some containing error return left.
+    * Otherwise return right containing value
+    */
   def genericValidation[A](test: A => Option[String])(a: A): Either[String, A] = ???
 
   /**

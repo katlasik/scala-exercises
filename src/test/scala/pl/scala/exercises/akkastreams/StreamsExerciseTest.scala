@@ -65,7 +65,7 @@ class StreamsExerciseTest extends TestKit(ActorSystem("Tests")) with AnyFlatSpec
         Event("Basia", Security, 1),
         Event("Basia", Security, 2),
         Event("Basia", Security, 2),
-        Event("Piotr", Security, 1),
+        Event("Piotr", Security, 1)
       )
     )
     //when
@@ -87,8 +87,7 @@ class StreamsExerciseTest extends TestKit(ActorSystem("Tests")) with AnyFlatSpec
         Event("Kasia", Security, 1),
         Event("Basia", Security, 2),
         Event("Kasia", Security, 1),
-        Event("Basia", Security, 2),
-
+        Event("Basia", Security, 2)
       )
     )
     //when

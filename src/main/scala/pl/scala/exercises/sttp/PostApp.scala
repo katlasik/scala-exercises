@@ -4,16 +4,17 @@ import sttp.client3._
 import sttp.client3.akkahttp._
 
 import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
 /**
- * Implement methods in PostApp class to get posts and users from urls in Urls object.
- * Display list of posts' titles and users in two columns:
- *
- * user1  title1
- * user2  title2
- * .....
- */
+  * Implement methods in PostApp class to get posts and users from urls in Urls object.
+  * Display list of posts' titles and users in two columns:
+  *
+  * user1  title1
+  * user2  title2
+  * .....
+  */
 
 object Urls {
   val Posts = uri"https://jsonplaceholder.typicode.com/posts"
@@ -22,7 +23,6 @@ object Urls {
 
 case class Post()
 case class User()
-
 
 object PostApp extends App {
 
@@ -33,6 +33,5 @@ object PostApp extends App {
   val backend: SttpBackend[Future, Any] = AkkaHttpBackend()
 
   Await.result(display(), 30.seconds)
-
 
 }

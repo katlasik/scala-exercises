@@ -2,10 +2,12 @@ package pl.scala.exercises.futures
 
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.GivenWhenThen
-import org.scalatest.concurrent.{Eventually, ScalaFutures}
+import org.scalatest.concurrent.Eventually
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import pl.scala.exercises.model.{Employee, Salary}
+import pl.scala.exercises.model.Employee
+import pl.scala.exercises.model.Salary
 
 import scala.concurrent.Future
 
@@ -62,6 +64,67 @@ class FuturesTest extends AnyFlatSpec with MockFactory with GivenWhenThen with S
 
     result shouldBe manager
 
+  }
+
+  it should "sum salaries" in new Fixture {
+
+    Given("there are some employees")
+
+    val employee1 = Employee(
+      id = 1,
+      firstName = "Joe",
+      lastName = "Doe",
+      email = "0",
+      employmentHistory = Vector.empty,
+      phones = Nil,
+      salary = Salary(100, "PLN"),
+      managerId = None,
+      location = None
+    )
+
+    val employee2 = Employee(
+      id = 2,
+      firstName = "Jane",
+      lastName = "Doe",
+      email = "0",
+      employmentHistory = Vector.empty,
+      phones = Nil,
+      salary = Salary(200, "PLN"),
+      managerId = None,
+      location = None
+    )
+
+    val employee3 = Employee(
+      id = 3,
+      firstName = "Jack",
+      lastName = "Doe",
+      email = "0",
+      employmentHistory = Vector.empty,
+      phones = Nil,
+      salary = Salary(300, "USD"),
+      managerId = None,
+      location = None
+    )
+
+    (actions.getEmployee _).expects(1).returns(
+      Future.successful(employee1)
+    )
+
+    (actions.getEmployee _).expects(2).returns(
+      Future.successful(employee2)
+    )
+
+    (actions.getEmployee _).expects(3).returns(
+      Future.successful(employee3)
+    )
+
+    When("sum salaries is calculated")
+    val future = futures.sumSalaries(List(1, 2, 3), "PLN")
+
+    Then("it should return the right amount")
+    eventually {
+      future.futureValue shouldBe Salary(300, "PLN")
+    }
   }
 
   it should "return failed future when employee has no manager" in new Fixture {

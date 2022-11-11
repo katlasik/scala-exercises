@@ -13,9 +13,8 @@ object Greeting extends Enum[Greeting] {
   case object Hi extends Greeting
   case object Bye extends Greeting
 
-
   def polishVersion(g: Greeting): String = g match {
     case Hello | Hi => "Cześć"
     case GoodBye => "Dobranoc"
-   }
+  }
 }

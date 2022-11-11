@@ -3,10 +3,23 @@ package pl.scala.exercises.akka
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
-import pl.scala.exercises.akka.LoyaltyAccountActor.{AccountBlocked, AccountUnblocked, AwardPoints, Balance, BlockAccount, GetBalance, OrderPrize, OrderRejected, PointsAwarded, PrizeOrdered, Result, UnblockAccount}
+import pl.scala.exercises.akka.LoyaltyAccountActor.AccountBlocked
+import pl.scala.exercises.akka.LoyaltyAccountActor.AccountUnblocked
+import pl.scala.exercises.akka.LoyaltyAccountActor.AwardPoints
+import pl.scala.exercises.akka.LoyaltyAccountActor.Balance
+import pl.scala.exercises.akka.LoyaltyAccountActor.BlockAccount
+import pl.scala.exercises.akka.LoyaltyAccountActor.GetBalance
+import pl.scala.exercises.akka.LoyaltyAccountActor.OrderPrize
+import pl.scala.exercises.akka.LoyaltyAccountActor.OrderRejected
+import pl.scala.exercises.akka.LoyaltyAccountActor.PointsAwarded
+import pl.scala.exercises.akka.LoyaltyAccountActor.PrizeOrdered
+import pl.scala.exercises.akka.LoyaltyAccountActor.Result
+import pl.scala.exercises.akka.LoyaltyAccountActor.UnblockAccount
 
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
+import scala.concurrent.Future
+import scala.concurrent.Promise
+import scala.util.Failure
+import scala.util.Success
 
 class LoyaltyAccountActorTest extends AnyFlatSpec with MockFactory {
 
@@ -111,7 +124,6 @@ class LoyaltyAccountActorTest extends AnyFlatSpec with MockFactory {
     //then
     probe.expectMessage(Balance(Points(100)))
   }
-
 
   it should "reject ordering prize when error happens during order" in fixture { testKit =>
     //given

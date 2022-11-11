@@ -1,6 +1,8 @@
 package pl.scala.exercises.futures
 
-import pl.scala.exercises.model.{Department, Employee, Salary}
+import pl.scala.exercises.model.Department
+import pl.scala.exercises.model.Employee
+import pl.scala.exercises.model.Salary
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
@@ -19,18 +21,21 @@ class Futures(actions: Actions) {
     * Use `action.getEmployee`.
     */
   def getEmployeesManager(employeeId: Int): Future[Employee] = ???
+
   /**
     *  TODO Ex44
     *  Calculate sum of all salaries of employees (if in currency passed as argument), which ids are passed as argument.
     *  Add tests.
     */
   def sumSalaries(employeesIds: List[Int], currency: String): Future[Salary] = ???
+
   /**
     *  TODO Ex45
     *  Get employee and it's current department. If there is no department return None.
     *  Add tests.
     */
   def getEmployeeAndDepartment(employeeId: Int): Future[Option[(Employee, Department)]] = ???
+
   /**
     *  TODO Ex46
     *  Implement function for updating employee salary. If salary is not bigger that previous salary return failed future with SalaryTooLow exception.

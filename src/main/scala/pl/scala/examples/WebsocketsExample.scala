@@ -56,7 +56,7 @@ object WebsocketsExample extends App {
     Flow[Message].map {
       case tm: TextMessage =>
         TextMessage(
-          tm.textStream.flatMapConcat{
+          tm.textStream.flatMapConcat {
             case "Up" => Source.future(system.ask(ref => Up(ref))).map(_ => "Ok")
             case "Down" => Source.future(system.ask(ref => Down(ref))).map(_ => "Ok")
             case "GetResult" => Source.future(system.ask(ref => GetResult(ref))).map(_.value.toString)

@@ -48,7 +48,6 @@ object QuillExample extends App {
   //Example of insert
   def insertCity(city: City) = quote(query[City].insertValue(lift(city)).onConflictIgnore)
 
-
   println(s"Cities starting with W: ${getCityNamesStartingWith("W")}")
   //println(s"Population of Berlin:${getPopulationOfCity("Berlin")}")
 

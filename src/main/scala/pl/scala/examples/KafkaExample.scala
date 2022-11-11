@@ -99,9 +99,7 @@ object KafkaExample extends App with ProducerSupport with ConsumerSupport {
 
   val producerFuture = sourceGreeting.delay(5.seconds)
     .runWith(
-      Sink.foreach( greeting =>
-        produce("messages", greeting)
-      )
+      Sink.foreach(greeting => produce("messages", greeting))
     )
 
   consume("messages").runWith(Sink.foreach(m => println(s"New message: $m")))

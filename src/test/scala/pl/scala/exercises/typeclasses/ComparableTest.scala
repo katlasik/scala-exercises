@@ -4,7 +4,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-class ComparableTest extends AnyFlatSpec with Matchers with TableDrivenPropertyChecks{
+class ComparableTest extends AnyFlatSpec with Matchers with TableDrivenPropertyChecks {
 
   it should "compare strings" in {
     val cases = Table(
@@ -15,7 +15,7 @@ class ComparableTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
       ("A", "B", LeftGreater),
       ("B", "A", RightGreater),
       ("BB", "BA", RightGreater),
-      ("BBB", "BAB", RightGreater),
+      ("BBB", "BAB", RightGreater)
     )
 
     forAll(cases) {
@@ -39,7 +39,5 @@ class ComparableTest extends AnyFlatSpec with Matchers with TableDrivenPropertyC
     }
 
   }
-
-
 
 }

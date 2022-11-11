@@ -17,20 +17,18 @@ import scala.util.Failure
 import scala.util.Success
 
 /**
- * Create actor for managing balance of the  loyalty card customer.
- * Actor should be to handle all Commands from companion object.
- *
- * 1. Implement handling of AwardPoints to allow adding points to the account.
- * 2. Implement GetBalance to allow checking the balance of the account by returning Balance.
- * 3. Implement OrderPrize to allow getting prize for available points.
- *    a) If account has insufficient points you should return OrderRejected with message "Insufficient funds!"
- *    b) If account has enough points you should call prize service to get order the prize.
- *    c) If service returns error you should return OrderRejected with message of the exception.
- *    d) If service returns success you should return message PrizeOrdered.
- *  4. If account is blocked by message BlockAccount it should ignore all messages, except UnblockAccount.
- */
-
-
+  * Create actor for managing balance of the  loyalty card customer.
+  * Actor should be to handle all Commands from companion object.
+  *
+  * 1. Implement handling of AwardPoints to allow adding points to the account.
+  * 2. Implement GetBalance to allow checking the balance of the account by returning Balance.
+  * 3. Implement OrderPrize to allow getting prize for available points.
+  *    a) If account has insufficient points you should return OrderRejected with message "Insufficient funds!"
+  *    b) If account has enough points you should call prize service to get order the prize.
+  *    c) If service returns error you should return OrderRejected with message of the exception.
+  *    d) If service returns success you should return message PrizeOrdered.
+  *  4. If account is blocked by message BlockAccount it should ignore all messages, except UnblockAccount.
+  */
 
 object LoyaltyAccountActor {
 
